@@ -1,0 +1,102 @@
+:root {
+    --background: #ffffff;
+    --wheel: black;
+    --wheel-height: 950px;
+    --wheel-width: 950px;
+    --side_items_color: #555;
+    --icon_color: gray;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: var(--background);
+}
+
+/* Main layout wrapper */
+.main-layout {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* PLAY BUTTON SECTION */
+.controls {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    padding-left: 2rem;
+}
+
+.controls .btn {
+    width: 120px;
+    height: 120px;
+    border-radius: 20px;
+    background: #f7f7f7;
+    border: 2px solid #ddd;
+}
+
+.fa-solid {
+    font-size: 3rem;
+    color: var(--icon_color);
+}
+
+/* WHEEL SECTION */
+.rotating-wheel {
+    background-color: var(--wheel);
+    height: var(--wheel-height);
+    width: var(--wheel-width);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.heading {
+    font-size: 3rem;
+}
+
+/* HAMBURGER SECTION */
+.hamburger-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-right: 2rem;
+}
+
+.hamburger-btn {
+    background: transparent;
+    border: none;
+    font-size: 3rem;
+    color: var(--icon_color);
+}
+
+/* OFFCANVAS CUSTOM THEMING */
+.offcanvas {
+    background-color: #111 !important;
+    color: white;
+}
+
+.offcanvas-header {
+    border-bottom: 1px solid #333;
+}
+
+.offcanvas .nav-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #222;
+    border-radius: 10px;
+    border: none;
+    text-align: left;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    color: #ccc;
+}
+
+.offcanvas .nav-btn:hover {
+    background: #333;
+}
