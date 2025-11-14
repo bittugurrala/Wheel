@@ -1,8 +1,8 @@
 :root {
     --background: #ffffff;
     --wheel: black;
-    --wheel-height: 950px;
-    --wheel-width: px;
+    --wheel-height: 700px;
+    --wheel-width: 700px;
     --side_items_color: #555;
     --icon_color: gray;
 }
