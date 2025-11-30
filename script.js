@@ -156,7 +156,7 @@ function createBubble(symbol) {
 
 
 // ===========================================
-// COLLISION CHECK
+// COLLISION CHECKkkkkkkkkkk
 // ===========================================
 function checkOverlap(pos, radius) {
     for (const p of bubblePositions) {
