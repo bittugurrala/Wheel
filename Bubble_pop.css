@@ -47,8 +47,8 @@ body, html {
 ============================ */
 .rotating-wheel {
     background-color: var(--wheel);
-    height: 90vh;
-    width: 90vh;
+    height: 95vh;
+    width: 95vh;
     max-width: 90vw;
     border-radius: 50%;
     display: flex;
