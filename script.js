@@ -310,10 +310,22 @@ function quitGame() {
 // TEXT TO SPEECH
 // ===========================================
 function speak(text) {
-    const utter = new SpeechSynthesisUtterance(text);
+    const utter = new SpeechSynthesisUtterance();
+
+    // If it's a single alphabet, speak only the letter sound
+    if (mode !== "colors" && /^[A-Z]$/.test(text)) {
+        utter.text = text;         // keep uppercase on screen
+        utter.spellOut = true;     // <-- important for iPad
+        utter.text = text.toLowerCase();  // but speak lowercase (prevents "CAPITAL")
+    }
+    else {
+        utter.text = text;
+    }
+
     utter.rate = 0.9;
     utter.pitch = 1.1;
     utter.volume = 1;
+
     speechSynthesis.speak(utter);
 }
 
