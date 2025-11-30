@@ -1,5 +1,5 @@
 // ===========================================
-// ELEMENTS
+// ELEMENTSsss
 // ===========================================
 const bubbleContainer = document.getElementById("bubble-container");
 const wheel = document.querySelector(".rotating-wheel");
