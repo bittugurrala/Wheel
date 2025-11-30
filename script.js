@@ -50,18 +50,41 @@ function getRemainingSymbols() {
 // ===========================================
 // START NEW SET OF 12 BUBBLES
 // ===========================================
+function isIpad() {
+    return /iPad|Macintosh/.test(navigator.userAgent) && "ontouchend" in document;
+}
+
 function startLevel() {
     bubbleContainer.innerHTML = "";
     bubblePositions = [];
     poppingTargetActive = false;
 
-    // Generate 12 random bubbles (no fixed target)
-    for (let i = 0; i < 12; i++) {
+    // Decide bubble count based on device
+    let totalBubbles = 12; // default desktop
+
+    if (isIpad()) {
+        // Try with 10 bubbles — if they overlap, use 9
+        totalBubbles = 10;
+    }
+
+    for (let i = 0; i < totalBubbles; i++) {
         createBubble(randomSymbol());
     }
 
-    chooseNextTarget(); // pick a target from existing bubbles
+    chooseNextTarget();
+
+    // Safety: if overlaps were detected, reduce bubbles and retry
+    if (isIpad() && bubbleContainer.children.length < totalBubbles) {
+        bubbleContainer.innerHTML = "";
+        bubblePositions = [];
+        totalBubbles = 9; // fallback size for iPad
+        for (let i = 0; i < totalBubbles; i++) {
+            createBubble(randomSymbol());
+        }
+        chooseNextTarget();
+    }
 }
+
 
 
 // ===========================================
@@ -205,17 +228,27 @@ function handleBubbleClick(bubble, symbol) {
 // ===========================================
 document.querySelectorAll(".nav-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-        let text = btn.innerText;
 
-        if (text.includes("x")) {
+        let text = btn.innerText.trim();   // FIX whitespace
+
+        if (/^\d+(\.\d+)?x$/.test(text)) { // EXACT match: 0.5x, 1x, 1.25x etc
             let speed = parseFloat(text.replace("x", ""));
             wheel.style.animationDuration = (25 / speed) + "s";
+            return;
         }
 
-        if (text === "Reset") startLevel();
-        if (text === "Quit") quitGame();
+        if (text === "Reset") {
+            startLevel();
+            return;
+        }
+
+        if (text === "Quit") {
+            quitGame();
+            return;
+        }
     });
 });
+
 
 
 // ===========================================

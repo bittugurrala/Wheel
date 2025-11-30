@@ -236,3 +236,68 @@ body, html {
     75% { transform: translateX(-6px); }
     100% { transform: translateX(0); }
 }
+/* iPad Portrait (768 x 1024) */
+@media (min-width: 700px) and (max-width: 1025px) and (orientation: portrait) {
+    .rotating-wheel {
+        height: 88vh;
+        width: 88vh;
+        max-width: 88vh; /* keep circle perfect */
+    }
+
+    .bubble {
+        height: 90px !important;
+        width: 90px !important;
+        font-size: 2.2rem !important;
+    }
+
+    #target-box {
+        font-size: 2rem;
+    }
+
+    #target-value {
+        font-size: 3rem;
+    }
+}
+
+/* iPad Landscape (1024 x 768) */
+@media (min-width: 1000px) and (max-width: 1400px) and (orientation: landscape) {
+    .rotating-wheel {
+        height: 80vh;
+        width: 80vh;
+    }
+
+    .bubble {
+        height: 95px !important;
+        width: 95px !important;
+        font-size: 2.5rem !important;
+    }
+}
+/* iPad Portrait */
+@media (min-width: 768px) and (max-width: 1050px) and (orientation: portrait) {
+
+    .rotating-wheel {
+        height: 85vh !important;
+        width: 85vh !important;
+    }
+
+    .bubble {
+        height: 110px !important;
+        width: 110px !important;
+        font-size: 2.7rem !important;
+    }
+}
+
+/* iPad Landscape */
+@media (min-width: 1000px) and (max-width: 1400px) and (orientation: landscape) {
+
+    .rotating-wheel {
+        height: 80vh !important;
+        width: 80vh !important;
+    }
+
+    .bubble {
+        height: 105px !important;
+        width: 105px !important;
+        font-size: 2.6rem !important;
+    }
+}
