@@ -18,8 +18,7 @@ let mode = "alphabets";   // alphabets / numbers
 let wheelPaused = false;
 
 let therapyColors = [
-    "#FFD600", "#00A6FF", "#FF1E1E", "#00D26A",
-    // "#BB6BD9", "#F2994A", "#EB5757"
+    "#FFD600", "#00A6FF", "#FF1E1E", "#00D26A"
 ];
 
 let bubblePositions = [];
@@ -55,12 +54,11 @@ function startLevel() {
     bubblePositions = [];
     poppingTargetActive = false;
 
-    // Generate 12 random bubbles (no fixed target)
     for (let i = 0; i < 12; i++) {
         createBubble(randomSymbol());
     }
 
-    chooseNextTarget(); // pick a target from existing bubbles
+    chooseNextTarget();
 }
 
 
@@ -85,7 +83,8 @@ function createBubble(symbol) {
     const bubble = document.createElement("div");
     bubble.classList.add("bubble");
     bubble.innerText = symbol;
-    bubble.style.background = therapyColors[Math.floor(Math.random() * therapyColors.length)];
+    bubble.style.background =
+        therapyColors[Math.floor(Math.random() * therapyColors.length)];
 
     const wheelSize = bubbleContainer.clientWidth;
     const bubbleRadius = (wheelSize * 0.10) / 2;
@@ -93,7 +92,6 @@ function createBubble(symbol) {
     let pos;
     let valid = false;
 
-    // Try 80 attempts for a safe position
     for (let attempt = 0; attempt < 80; attempt++) {
         const angle = Math.random() * 2 * Math.PI;
         const maxR = (wheelSize / 2) - bubbleRadius;
@@ -137,7 +135,6 @@ function checkOverlap(pos, radius) {
 }
 
 
-
 // ===========================================
 // SELECT NEW TARGET FROM EXISTING BUBBLES
 // ===========================================
@@ -145,12 +142,10 @@ function chooseNextTarget() {
     let remaining = getRemainingSymbols();
 
     if (remaining.length === 0) {
-        // all bubbles popped → new set
         setTimeout(startLevel, 400);
         return;
     }
 
-    // choose random from existing values
     currentTarget = remaining[Math.floor(Math.random() * remaining.length)];
 
     updateTargetDisplay();
@@ -160,7 +155,7 @@ function chooseNextTarget() {
 
 
 // ===========================================
-// POP BUBBLE CLICK HANDLER
+// POP BUBBLE CLICK HANDLER  (UPDATED)
 // ===========================================
 function handleBubbleClick(bubble, symbol) {
 
@@ -168,33 +163,31 @@ function handleBubbleClick(bubble, symbol) {
 
     if (symbol === currentTarget) {
 
-        correctSound.play();
+        speak(symbol + " clicked");
+
+        // correctSound.play();
         bubble.classList.add("pop");
 
         setTimeout(() => {
             bubble.remove();
 
-            // check if any bubbles with this target remain
             let stillLeft = false;
             document.querySelectorAll(".bubble").forEach(b => {
                 if (b.innerText === currentTarget) stillLeft = true;
             });
 
             if (!stillLeft) {
-                // finished this target → choose next
                 setTimeout(() => chooseNextTarget(), 300);
             }
 
         }, 250);
 
     } else {
+        speak(symbol + " is wrong");
+
         wrongSound.play();
         bubble.classList.add("wrong");
-
-        setTimeout(() => {
-            bubble.classList.remove("wrong");
-        }, 300);
-
+        setTimeout(() => bubble.classList.remove("wrong"), 300);
     }
 }
 
@@ -250,6 +243,18 @@ function quitGame() {
     bubbleContainer.innerHTML = "";
     targetValueBox.innerText = "";
     alert("Game Stopped");
+}
+
+
+// ===========================================
+// TEXT TO SPEECH
+// ===========================================
+function speak(text) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 0.9;
+    utter.pitch = 1.1;
+    utter.volume = 1;
+    speechSynthesis.speak(utter);
 }
 
 
