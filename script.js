@@ -18,7 +18,7 @@ let mode = "alphabets";   // alphabets / numbers
 let wheelPaused = false;
 
 let therapyColors = [
-    "#FFD600", "#00A6FF", "#FF1E1E", "#00D26A"
+    "#FFF6A3", "#A8D8FF", "#FFB7B2", "#B9F2C7", "#D8C5FF"
 ];
 
 let bubblePositions = [];
@@ -163,7 +163,7 @@ function handleBubbleClick(bubble, symbol) {
 
     if (symbol === currentTarget) {
 
-        speak(symbol + " clicked");
+        speak(symbol);
 
         // correctSound.play();
         bubble.classList.add("pop");
@@ -183,9 +183,8 @@ function handleBubbleClick(bubble, symbol) {
         }, 250);
 
     } else {
-        speak(symbol + " is wrong");
-
         wrongSound.play();
+        speak("wrong");
         bubble.classList.add("wrong");
         setTimeout(() => bubble.classList.remove("wrong"), 300);
     }
