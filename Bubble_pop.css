@@ -157,8 +157,8 @@ body, html {
 /* Bubble stays FIXED (wheel rotates behind) */
 .bubble {
     position: absolute;
-    height: clamp(40px, 7vw, 85px);
-    width: clamp(40px, 7vw, 85px);
+    height: clamp(36px, 6vw, 78px);
+    width: clamp(36px, 6vw, 78px);
     border-radius: 50%;
     display: flex;
     justify-content: center;

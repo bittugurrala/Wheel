@@ -18,8 +18,8 @@ let mode = "alphabets";   // alphabets / numbers
 let wheelPaused = false;
 
 let therapyColors = [
-    "#FF6F61", "#6FCF97", "#56CCF2", "#F2C94C",
-    "#BB6BD9", "#F2994A", "#EB5757"
+    "#FFD600", "#00A6FF", "#FF1E1E", "#00D26A",
+    // "#BB6BD9", "#F2994A", "#EB5757"
 ];
 
 let bubblePositions = [];
@@ -50,41 +50,18 @@ function getRemainingSymbols() {
 // ===========================================
 // START NEW SET OF 12 BUBBLES
 // ===========================================
-function isIpad() {
-    return /iPad|Macintosh/.test(navigator.userAgent) && "ontouchend" in document;
-}
-
 function startLevel() {
     bubbleContainer.innerHTML = "";
     bubblePositions = [];
     poppingTargetActive = false;
 
-    // Decide bubble count based on device
-    let totalBubbles = 12; // default desktop
-
-    if (isIpad()) {
-        // Try with 10 bubbles — if they overlap, use 9
-        totalBubbles = 10;
-    }
-
-    for (let i = 0; i < totalBubbles; i++) {
+    // Generate 12 random bubbles (no fixed target)
+    for (let i = 0; i < 12; i++) {
         createBubble(randomSymbol());
     }
 
-    chooseNextTarget();
-
-    // Safety: if overlaps were detected, reduce bubbles and retry
-    if (isIpad() && bubbleContainer.children.length < totalBubbles) {
-        bubbleContainer.innerHTML = "";
-        bubblePositions = [];
-        totalBubbles = 9; // fallback size for iPad
-        for (let i = 0; i < totalBubbles; i++) {
-            createBubble(randomSymbol());
-        }
-        chooseNextTarget();
-    }
+    chooseNextTarget(); // pick a target from existing bubbles
 }
-
 
 
 // ===========================================
@@ -228,27 +205,17 @@ function handleBubbleClick(bubble, symbol) {
 // ===========================================
 document.querySelectorAll(".nav-btn").forEach(btn => {
     btn.addEventListener("click", () => {
+        let text = btn.innerText;
 
-        let text = btn.innerText.trim();   // FIX whitespace
-
-        if (/^\d+(\.\d+)?x$/.test(text)) { // EXACT match: 0.5x, 1x, 1.25x etc
+        if (text.includes("x")) {
             let speed = parseFloat(text.replace("x", ""));
             wheel.style.animationDuration = (25 / speed) + "s";
-            return;
         }
 
-        if (text === "Reset") {
-            startLevel();
-            return;
-        }
-
-        if (text === "Quit") {
-            quitGame();
-            return;
-        }
+        if (text === "Reset") startLevel();
+        if (text === "Quit") quitGame();
     });
 });
-
 
 
 // ===========================================
