@@ -1,5 +1,5 @@
 :root {
-    --background: #ffffff;
+    --background: linear-gradient(#D7ECFF, #BFDFFF);;
     --wheel: black;
     --icon_color: gray;
 }
@@ -11,8 +11,9 @@ body, html {
     height: 100%;
     margin: 0;
     padding: 0;
-    background: var(--background);
+    background: var(--background); 
 }
+
 
 .main-layout {
     height: 100vh;
@@ -30,9 +31,9 @@ body, html {
 .controls .btn {
     width: clamp(70px, 10vw, 120px);
     height: clamp(70px, 10vw, 120px);
-    border-radius: 20px;
-    background: #f7f7f7;
-    border: 2px solid #ddd;
+    /* border-radius: 20px; */
+    /* background: #f7f7f7; */
+    /* border: 2px solid #ddd; */
 }
 
 .fa-solid {

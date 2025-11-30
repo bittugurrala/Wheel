@@ -1,5 +1,5 @@
 // ===========================================
-// ELEMENTSsss
+// ELEMENTS
 // ===========================================
 const bubbleContainer = document.getElementById("bubble-container");
 const wheel = document.querySelector(".rotating-wheel");
@@ -13,13 +13,23 @@ const targetValueBox = document.getElementById("target-value");
 // ===========================================
 // GAME SETTINGS
 // ===========================================
-let mode = "alphabets";   // alphabets / numbers
-
+let mode = "alphabets";   // alphabets / numbers / colors
 let wheelPaused = false;
 
+// COLOR LEARNING MODE — BRIGHT COLORS ONLY
+let brightColors = [
+    { name: "Red",    code: "#FF1E1E" },
+    { name: "Blue",   code: "#0084FF" },
+    { name: "Green",  code: "#00D26A" },
+    { name: "Yellow", code: "#FFD600" }
+];
+
+
+// SOFT THERAPY COLORS (Alphabet & Number mode)
 let therapyColors = [
     "#FFF6A3", "#A8D8FF", "#FFB7B2", "#B9F2C7", "#D8C5FF"
 ];
+
 
 let bubblePositions = [];
 let currentTarget = "";
@@ -35,9 +45,19 @@ function updateTargetDisplay() {
 
 
 // ===========================================
-// GET EXISTING SYMBOLS FROM BUBBLES
+// GET EXISTING SYMBOLS (TEXT OR COLOR NAMES)
 // ===========================================
 function getRemainingSymbols() {
+
+    if (mode === "colors") {
+        let set = new Set();
+        document.querySelectorAll(".bubble").forEach(b => {
+            set.add(b.dataset.colorname);
+        });
+        return Array.from(set);
+    }
+
+    // alphabet & number modes
     let set = new Set();
     document.querySelectorAll(".bubble").forEach(b => {
         set.add(b.innerText);
@@ -47,7 +67,7 @@ function getRemainingSymbols() {
 
 
 // ===========================================
-// START NEW SET OF 12 BUBBLES
+// START A NEW LEVEL
 // ===========================================
 function startLevel() {
     bubbleContainer.innerHTML = "";
@@ -69,25 +89,40 @@ function randomSymbol() {
     if (mode === "alphabets") {
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return letters[Math.floor(Math.random() * letters.length)];
-    } else {
+    }
+
+    if (mode === "numbers") {
         const nums = "0123456789";
         return nums[Math.floor(Math.random() * nums.length)];
+    }
+
+    if (mode === "colors") {
+        return brightColors[Math.floor(Math.random() * brightColors.length)].name;
     }
 }
 
 
 // ===========================================
-// CREATE CIRCLE-SAFE RANDOM PLACEMENT BUBBLE
+// CREATE BUBBLE (supports all 3 modes)
 // ===========================================
 function createBubble(symbol) {
     const bubble = document.createElement("div");
     bubble.classList.add("bubble");
-    bubble.innerText = symbol;
-    bubble.style.background =
-        therapyColors[Math.floor(Math.random() * therapyColors.length)];
+
+    if (mode === "colors") {
+        let colorObj = brightColors.find(c => c.name === symbol);
+
+        bubble.style.background = colorObj.code;
+        bubble.innerText = "";
+        bubble.dataset.colorname = colorObj.name;   // STORE color name
+    } else {
+        bubble.innerText = symbol;
+        bubble.style.background =
+            therapyColors[Math.floor(Math.random() * therapyColors.length)];
+    }
 
     const wheelSize = bubbleContainer.clientWidth;
-    const bubbleRadius = (wheelSize * 0.10) / 2;
+    const bubbleRadius = (wheelSize * 0.095) / 2;
 
     let pos;
     let valid = false;
@@ -114,7 +149,7 @@ function createBubble(symbol) {
     bubble.style.left = pos.x + "%";
     bubble.style.top = pos.y + "%";
 
-    bubble.onclick = () => handleBubbleClick(bubble, symbol);
+    bubble.onclick = () => handleBubbleClick(bubble);
 
     bubbleContainer.appendChild(bubble);
 }
@@ -136,7 +171,7 @@ function checkOverlap(pos, radius) {
 
 
 // ===========================================
-// SELECT NEW TARGET FROM EXISTING BUBBLES
+// CHOOSE NEXT TARGET
 // ===========================================
 function chooseNextTarget() {
     let remaining = getRemainingSymbols();
@@ -148,48 +183,65 @@ function chooseNextTarget() {
 
     currentTarget = remaining[Math.floor(Math.random() * remaining.length)];
 
-    updateTargetDisplay();
+    if (mode === "colors") {
+        // Find the color code for the target
+        let colorObj = brightColors.find(c => c.name === currentTarget);
+
+        targetValueBox.innerText = currentTarget;
+        targetValueBox.style.color = colorObj.code; 
+        speak(currentTarget);
+
+    } else {
+        targetValueBox.style.color = "#ff5722"; 
+        updateTargetDisplay();
+    }
+
     poppingTargetActive = true;
 }
 
 
 
 // ===========================================
-// POP BUBBLE CLICK HANDLER  (UPDATED)
+// CLICK HANDLER (updated for all modes)
 // ===========================================
-function handleBubbleClick(bubble, symbol) {
+function handleBubbleClick(bubble) {
 
     if (!poppingTargetActive) return;
 
-    if (symbol === currentTarget) {
+    let clickedValue =
+        mode === "colors"
+            ? bubble.dataset.colorname
+            : bubble.innerText;
 
-        speak(symbol);
+    if (clickedValue === currentTarget) {
 
-        // correctSound.play();
+        speak(clickedValue);
+
         bubble.classList.add("pop");
 
         setTimeout(() => {
             bubble.remove();
 
             let stillLeft = false;
+
             document.querySelectorAll(".bubble").forEach(b => {
-                if (b.innerText === currentTarget) stillLeft = true;
+                let value =
+                    mode === "colors"
+                        ? b.dataset.colorname
+                        : b.innerText;
+                if (value === currentTarget) stillLeft = true;
             });
 
-            if (!stillLeft) {
-                setTimeout(() => chooseNextTarget(), 300);
-            }
+            if (!stillLeft) setTimeout(() => chooseNextTarget(), 300);
 
         }, 250);
 
     } else {
-        wrongSound.play();
         speak("wrong");
         bubble.classList.add("wrong");
         setTimeout(() => bubble.classList.remove("wrong"), 300);
     }
 }
-
 
 
 // ===========================================
@@ -211,7 +263,7 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
 
 
 // ===========================================
-// MODE SWITCH
+// MODE SWITCH (A <-> 1)
 // ===========================================
 document.querySelector(".modeSwitch").addEventListener("click", () => {
     mode = (mode === "alphabets") ? "numbers" : "alphabets";
@@ -220,7 +272,16 @@ document.querySelector(".modeSwitch").addEventListener("click", () => {
 
 
 // ===========================================
-// PLAY / PAUSE WHEEL
+// COLOR MODE SWITCH
+// ===========================================
+document.querySelector(".modeColors").addEventListener("click", () => {
+    mode = "colors";
+    startLevel();
+});
+
+
+// ===========================================
+// PLAY / PAUSE
 // ===========================================
 document.querySelector(".playpause").addEventListener("click", () => {
     if (wheelPaused) {
@@ -236,7 +297,7 @@ document.querySelector(".playpause").addEventListener("click", () => {
 
 
 // ===========================================
-// QUIT
+// QUIT GAME
 // ===========================================
 function quitGame() {
     bubbleContainer.innerHTML = "";
