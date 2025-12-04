@@ -78,7 +78,8 @@ function startLevel() {
         createBubble(randomSymbol());
     }
 
-    chooseNextTarget();
+    setTimeout(() => chooseNextTarget(), 300);
+
 }
 
 
@@ -184,20 +185,28 @@ function chooseNextTarget() {
     currentTarget = remaining[Math.floor(Math.random() * remaining.length)];
 
     if (mode === "colors") {
-        // Find the color code for the target
         let colorObj = brightColors.find(c => c.name === currentTarget);
-
         targetValueBox.innerText = currentTarget;
-        targetValueBox.style.color = colorObj.code; 
-        speak(currentTarget);
+        targetValueBox.style.color = colorObj.code;
 
-    } else {
-        targetValueBox.style.color = "#ff5722"; 
-        updateTargetDisplay();
+        setTimeout(() => {
+            speak(currentTarget);
+        }, 400);  // delay for smoothness
+    } 
+    else {
+        targetValueBox.innerText = currentTarget;
+        targetValueBox.style.color = "#ff5722";
+        // speak("target" + currentTarget)
+
+        setTimeout(() => {
+            speak("target" + currentTarget);
+        }, 400); // delay for alphabet/number too
     }
 
     poppingTargetActive = true;
 }
+
+
 
 
 
@@ -232,7 +241,14 @@ function handleBubbleClick(bubble) {
                 if (value === currentTarget) stillLeft = true;
             });
 
-            if (!stillLeft) setTimeout(() => chooseNextTarget(), 300);
+            if (!stillLeft) {
+                poppingTargetActive = false;
+
+                // 500ms delay after popping last bubble
+                setTimeout(() => {
+                    chooseNextTarget();
+                }, 600);
+            }
 
         }, 250);
 
